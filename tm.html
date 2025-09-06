@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Toastmasters Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #22c55e;
+      --yellow: #facc15;
+      --red: #ef4444;
+      --darkred: #991b1b;
+      --bg: #0f172a;
+      --text: #f8fafc;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 1s ease;
+    }
+
+    #timer {
+      font-size: 5rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    label {
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    input {
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      font-size: 1rem;
+      width: 80px;
+      text-align: center;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--yellow);
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--green);
+      color: #fff;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div id="timer">00:00</div>
+  <div class="controls">
+    <label>Green (s)
+      <input type="number" id="greenTime" value="60">
+    </label>
+    <label>Yellow (s)
+      <input type="number" id="yellowTime" value="30">
+    </label>
+    <label>Red (s)
+      <input type="number" id="redTime" value="30">
+    </label>
+    <button onclick="startTimer()">Start</button>
+  </div>
+
+  <script>
+    let interval, start;
+
+    function startTimer() {
+      clearInterval(interval);
+      start = Date.now();
+      const greenT = parseInt(document.getElementById("greenTime").value) * 1000;
+      const yellowT = parseInt(document.getElementById("yellowTime").value) * 1000;
+      const redT = parseInt(document.getElementById("redTime").value) * 1000;
+
+      interval = setInterval(() => {
+        let elapsed = Date.now() - start;
+        document.getElementById("timer").textContent = formatTime(elapsed);
+
+        if (elapsed < greenT) {
+          document.body.style.backgroundColor = "var(--green)";
+          document.body.style.color = "#fff";
+        } else if (elapsed < yellowT) {
+          document.body.style.backgroundColor = "var(--yellow)";
+          document.body.style.color = "#000";
+        } else if (elapsed < redT) {
+          document.body.style.backgroundColor = "var(--red)";
+          document.body.style.color = "#fff";
+        } else {
+          document.body.style.backgroundColor = "var(--darkred)";
+          document.body.style.color = "#fff";
+        }
+      }, 200);
+    }
+
+    function formatTime(ms) {
+      let totalSeconds = Math.floor(ms / 1000);
+      let minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      let seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${minutes}:${seconds}`;
+    }
+  </script>
+</body>
+</html>
