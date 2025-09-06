@@ -1,0 +1,127 @@
+:root {
+    --green: #22c55e;
+    --yellow: #facc15;
+    --red: #ef4444;
+    --darkred: #991b1b;
+    --bg: #0f172a;
+    --text: #f8fafc;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 1s ease;
+    gap: 2rem;
+}
+
+#timer {
+    font-size: 5rem;
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+label {
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+input[type="number"] {
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: var(--text);
+    font-size: 1rem;
+    width: 80px;
+    text-align: center;
+    outline: none;
+}
+
+input[type="text"] {
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: var(--text);
+    font-size: 1rem;
+    width: 150px;
+    text-align: center;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--yellow);
+}
+
+button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--green);
+    color: #fff;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: #16a34a;
+}
+
+#stopBtn {
+    background: var(--red);
+}
+
+#stopBtn:hover {
+    background: var(--darkred);
+}
+
+#speakersList {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: #1e293b;
+    width: 90%;
+    max-width: 600px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #334155;
+}
+
+.speaker-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #334155;
+}
+
+.speaker-entry:last-child {
+    border-bottom: none;
+}
+
+.speaker-entry span {
+    font-size: 1.1rem;
+}
+
+.speaker-entry .time {
+    font-weight: 600;
+}
