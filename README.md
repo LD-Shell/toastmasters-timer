@@ -19,7 +19,7 @@ A simple web-based timer for Toastmasters meetings. This tool tracks speaking ti
 ### How to Use It
 
 1.  **Open the Website:** Simply visit the live site at [https://ld-shell.github.io/toastmasters-timer/](https://ld-shell.github.io/toastmasters-timer/).
-2.  **Set Your Times:** Adjust the Green, Yellow, and Red time limits in seconds to match the speech requirements. The default settings are **60 seconds for Green**, **30 seconds for Yellow**, and **30 seconds for Red** (overtime).
+2.  **Set Your Times:** Adjust the Green, Yellow, and Red time limits in seconds to match the speech requirements. The default settings are **1 minute for Green**, **1 minute and 30 seconds for Yellow**, and **2 minutes for Red** (overtime).
 3.  **Enter Speaker Name:** Type the speaker's name into the input field.
 4.  **Start the Timer:** Click the **Start** button to begin timing the speech. The background will change colors according to the limits you set.
 5.  **Record the Time:** When the speaker finishes, click **Stop & Record**. The speaker's name and their final time will be added to the list below.
