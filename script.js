@@ -69,7 +69,7 @@ function startTimer() {
 
     interval = setInterval(() => {
         let elapsed = Date.now() - start;
-        timerDisplay.textContent = formatTime_old(elapsed);
+        timerDisplay.textContent = formatTime(elapsed);
 
         // Check conditions in the correct order
         if (elapsed >= redMarker) {
@@ -117,7 +117,7 @@ function stopAndRecord() {
                 <span>${speakerName || 'Unnamed Speaker'}</span>
             </div>
             <div class="speaker-entry-controls">
-                <span class="time">${formatTime_readable(finalTime)}</span>
+                <span class="time">${formatTime(finalTime)}</span>
                 <button class="delete-btn" onclick="deleteEntry(this)">&times;</button>
             </div>
         `;
@@ -137,7 +137,7 @@ function cancelTimer() {
 }
 
 function resetTimerState() {
-    timerDisplay.textContent = "00:00";
+    timerDisplay.textContent = "00:00:00";
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
@@ -152,37 +152,18 @@ function resetTimerState() {
     cancelBtn.disabled = true;
 }
 
-// Formats time for the main timer display (MM:SS)
-function formatTime_old(ms) {
-    let totalSeconds = Math.floor(ms / 1000);
-    let minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-    let seconds = String(totalSeconds % 60).padStart(2, "0");
-    return `${minutes}:${seconds}`;
-}
-
-// Formats time for the recorded entries (more readable)
-function formatTime_readable(ms) {
+// New: Formats time for the main timer and recorded entries (HH:MM:SS)
+function formatTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let hours = Math.floor(totalSeconds / 3600);
     let minutes = Math.floor((totalSeconds % 3600) / 60);
     let seconds = totalSeconds % 60;
     
-    let parts = [];
-    if (hours > 0) {
-        parts.push(`${hours} hr${hours > 1 ? 's' : ''}`);
-    }
-    if (minutes > 0) {
-        parts.push(`${minutes} min${minutes > 1 ? 's' : ''}`);
-    }
-    if (seconds > 0) {
-        parts.push(`${seconds} sec${seconds > 1 ? 's' : ''}`);
-    }
-
-    if (parts.length === 0) {
-        return "0 secs";
-    }
+    hours = String(hours).padStart(2, "0");
+    minutes = String(minutes).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
     
-    return parts.join(" ");
+    return `${hours}:${minutes}:${seconds}`;
 }
 
 function deleteEntry(btn) {
