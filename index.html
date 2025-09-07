@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toastmasters Timer Pro</title>
+    <title>Presentation Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="welcome-container">
-        <h1>Toastmasters Timer</h1>
-        <p>A simple, modern timer to help you track speech times. It provides clear visual cues and records a log of speakers and their times. Easy!</p>
+    <div class="info-container">
+        <h1>Presentation Timer</h1>
+        <p>A simple, modern timer to help you track speech and presentation times. It provides clear visual cues and records a log of speakers for easy reference.</p>
     </div>
 
     <div id="timer">00:00</div>
@@ -44,6 +45,7 @@
             <input type="checkbox" id="soundToggle" checked>
             <span class="slider"></span>
         </label>
+        <button id="exportBtn">Export to PDF</button>
     </div>
     
     <div id="speakersList">
