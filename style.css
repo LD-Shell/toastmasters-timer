@@ -164,20 +164,44 @@ body {
     color: var(--dynamic-text-color);
     text-align: center;
     font-size: 1rem;
-    padding: 0.6rem;
+    padding: 0.6rem 0.2rem; /* Reduced padding for the internal text */
     width: calc(33.33% - 10px);
     outline: none;
+    position: relative; /* Added for pseudo-elements */
+    box-sizing: border-box;
 }
 
-.time-input-group input:nth-of-type(1) { width: calc(33.33% - 10px); }
-.time-input-group input:nth-of-type(2), .time-input-group input:nth-of-type(3) { width: calc(33.33% - 10px); }
+/* Style for pseudo-elements */
+.time-input-group input::after {
+    position: absolute;
+    right: 2px;
+    font-size: 0.7rem;
+    opacity: 0.7;
+    pointer-events: none;
+}
 
-.time-input-group span {
-    font-size: 1rem;
+.time-input-group input:nth-of-type(1)::after {
+    content: "hr";
+}
+
+.time-input-group input:nth-of-type(2)::after {
+    content: "min";
+}
+
+.time-input-group input:nth-of-type(3)::after {
+    content: "sec";
+}
+
+/* Style for the dividers */
+.time-input-group::before,
+.time-input-group::after {
+    content: ':';
     font-weight: bold;
     color: #cbd5e1;
-    width: 10px;
-    text-align: center;
+}
+
+.time-input-group::before {
+    margin-right: -4px;
 }
 
 /* Labels + Inputs */
