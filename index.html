@@ -14,7 +14,7 @@
         <p>A simple, modern timer to help you track speech and presentation times. It provides clear visual cues and records a log of speakers for easy reference.</p>
     </div>
 
-    <div id="timer">00:00</div>
+    <div id="timer">00 <i>hr</i> : 00 <i>min</i> : 00 <i>sec</i></div>
     
     <details class="info-details">
         <summary>How the timer works</summary>
@@ -32,6 +32,8 @@
         <div class="input-group">
             <label>Green
                 <div class="time-input-group">
+                    <input type="number" id="greenHr" value="0" placeholder="hr">
+                    <span>:</span>
                     <input type="number" id="greenMin" value="1" placeholder="min">
                     <span>:</span>
                     <input type="number" id="greenSec" value="0" placeholder="sec">
@@ -39,6 +41,8 @@
             </label>
             <label>Yellow
                 <div class="time-input-group">
+                    <input type="number" id="yellowHr" value="0" placeholder="hr">
+                    <span>:</span>
                     <input type="number" id="yellowMin" value="1" placeholder="min">
                     <span>:</span>
                     <input type="number" id="yellowSec" value="30" placeholder="sec">
@@ -46,6 +50,8 @@
             </label>
             <label>Red
                 <div class="time-input-group">
+                    <input type="number" id="redHr" value="0" placeholder="hr">
+                    <span>:</span>
                     <input type="number" id="redMin" value="2" placeholder="min">
                     <span>:</span>
                     <input type="number" id="redSec" value="0" placeholder="sec">
