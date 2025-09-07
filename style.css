@@ -11,6 +11,7 @@
     --list-bg: rgba(30, 41, 59, 0.7);
     --cancel-btn: #475569;
     --export-btn: #2d3748;
+    --dynamic-text-color: var(--text); /* New variable */
 }
 
 body {
@@ -22,7 +23,7 @@ body {
     align-items: center;
     font-family: 'Inter', sans-serif;
     background: var(--bg);
-    color: var(--text);
+    color: var(--dynamic-text-color); /* Use the new variable */
     transition: background-color 1s ease;
     gap: 1.5rem;
     padding: 1rem;
@@ -33,20 +34,76 @@ body {
     text-align: center;
     max-width: 600px;
     margin-bottom: 2rem;
-    color: #cbd5e1;
+    color: var(--dynamic-text-color); /* Use the new variable */
 }
 
 .info-container h1 {
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0;
-    color: var(--text);
+    color: var(--dynamic-text-color); /* Use the new variable */
 }
 
 .info-container p {
     font-size: 1rem;
     line-height: 1.5;
     margin-top: 0.5rem;
+}
+
+/* New: Collapsible info section styles */
+.info-details {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 10px var(--shadow);
+    color: var(--dynamic-text-color); /* Use the new variable */
+}
+
+.info-details summary {
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none; /* Hide default marker */
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+}
+
+/* Custom marker for details summary */
+.info-details summary::marker,
+.info-details summary::-webkit-details-marker {
+    display: none;
+}
+.info-details summary::before {
+    content: '+';
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    color: var(--yellow);
+}
+
+/* Rotate marker when open */
+.info-details[open] summary::before {
+    transform: rotate(45deg);
+}
+
+.info-details .info-content {
+    padding-bottom: 1rem;
+}
+.info-details .info-content p {
+    margin-top: 0;
+    font-size: 0.9rem;
+}
+.info-details .info-content ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.info-details .info-content li {
+    margin-bottom: 0.2rem;
 }
 
 /* Timer */
@@ -90,7 +147,7 @@ label {
     gap: 0.3rem;
     flex: 1;
     min-width: 90px;
-    color: #cbd5e1;
+    color: var(--dynamic-text-color); /* Use the new variable */
 }
 
 input[type="number"],
@@ -101,7 +158,7 @@ input[type="text"] {
     background: var(--input-bg);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    color: var(--text);
+    color: var(--dynamic-text-color); /* Use the new variable */
     font-size: 1rem;
     width: 100%;
     text-align: center;
@@ -186,7 +243,6 @@ button:hover {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 10px var(--shadow);
     box-sizing: border-box;
-    /* Added flex for internal layout */
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -265,7 +321,7 @@ button:hover {
     gap: 0.6rem;
     cursor: pointer;
     font-size: 0.95rem;
-    color: #cbd5e1;
+    color: var(--dynamic-text-color); /* Use the new variable */
 }
 
 .toggle-container input {
@@ -308,6 +364,10 @@ input:checked + .slider:before {
 @media (max-width: 768px) {
     body {
         gap: 1rem;
+        padding: 0.5rem;
+    }
+    .info-details {
+        font-size: 0.9rem;
         padding: 0.5rem;
     }
     #timer {
