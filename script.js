@@ -212,7 +212,7 @@ function exportToPDF() {
     // Report Title
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(24);
-    doc.text("Presentation Report", 20, yPos);
+    doc.text("Timer's Report", 20, yPos);
     yPos += 15;
 
     // Date
@@ -256,3 +256,4 @@ startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
+
