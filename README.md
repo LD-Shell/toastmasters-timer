@@ -1,6 +1,6 @@
 # Toastmasters Timer
 
-A simple and modern web-based timer for Toastmasters meetings. This tool tracks speaking times, provides visual cues, and records a log of speaker names and their final durations.
+A simple web-based timer for Toastmasters meetings. This tool tracks speaking times, provides visual cues, and records a log of speaker names and their final durations.
 
 ### Features
 
