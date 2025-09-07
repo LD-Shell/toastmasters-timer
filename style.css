@@ -9,7 +9,7 @@
 
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -18,12 +18,15 @@ body {
     background-color: var(--bg);
     color: var(--text);
     transition: background-color 1s ease;
-    gap: 2rem;
+    gap: 1.5rem;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 #timer {
     font-size: 5rem;
     font-weight: 600;
+    text-align: center;
 }
 
 .controls {
@@ -31,6 +34,8 @@ body {
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
+    max-width: 700px;
 }
 
 label {
@@ -39,6 +44,8 @@ label {
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
+    flex-basis: auto;
+    margin-bottom: 0.5rem;
 }
 
 input[type="number"] {
@@ -48,7 +55,7 @@ input[type="number"] {
     background: #1e293b;
     color: var(--text);
     font-size: 1rem;
-    width: 80px;
+    width: 70px;
     text-align: center;
     outline: none;
 }
@@ -60,7 +67,8 @@ input[type="text"] {
     background: #1e293b;
     color: var(--text);
     font-size: 1rem;
-    width: 150px;
+    width: calc(100% - 2rem);
+    max-width: 250px;
     text-align: center;
     outline: none;
 }
@@ -78,12 +86,15 @@ button {
     cursor: pointer;
     background: var(--green);
     color: #fff;
-    transition: transform 0.2s ease, background 0.3s ease;
+    transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.2s ease;
+    flex-grow: 1;
+    min-width: 120px;
 }
 
 button:hover {
     transform: scale(1.05);
     background: #16a34a;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 #stopBtn {
@@ -95,22 +106,23 @@ button:hover {
 }
 
 #speakersList {
-    margin-top: 2rem;
-    padding: 1.5rem;
+    margin-top: 1rem;
+    padding: 1.2rem;
     border-radius: 10px;
     background: #1e293b;
-    width: 90%;
+    width: 100%;
     max-width: 600px;
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
     border: 1px solid #334155;
+    box-sizing: border-box;
 }
 
 .speaker-entry {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: 0.6rem 0;
     border-bottom: 1px solid #334155;
 }
 
@@ -119,9 +131,126 @@ button:hover {
 }
 
 .speaker-entry span {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    word-break: break-word;
 }
 
 .speaker-entry .time {
     font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+/* New CSS for the toggle switch */
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.toggle-container input {
+    display: none;
+}
+
+.slider {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: background-color 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: transform 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--green);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* --- Media Queries for Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    body {
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    #timer {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+
+    label {
+        align-items: flex-start;
+        margin-bottom: 0;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+        width: 100%;
+        max-width: unset;
+    }
+
+    button {
+        width: 100%;
+        min-width: unset;
+        padding: 0.7rem 1rem;
+    }
+
+    #speakersList {
+        padding: 0.8rem;
+        max-height: 250px;
+    }
+
+    .speaker-entry span {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #timer {
+        font-size: 2.8rem;
+    }
+
+    input[type="number"] {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    input[type="text"] {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .speaker-entry span {
+        font-size: 0.85rem;
+    }
 }
