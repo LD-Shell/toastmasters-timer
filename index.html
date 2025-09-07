@@ -10,11 +10,24 @@
 </head>
 <body>
     <div class="info-container">
-        <h1>Timer</h1>
+        <h1>Presentation Timer</h1>
         <p>A simple, modern timer to help you track speech and presentation times. It provides clear visual cues and records a log of speakers for easy reference.</p>
     </div>
 
     <div id="timer">00:00</div>
+    
+    <details class="info-details">
+        <summary>How the timer works</summary>
+        <div class="info-content">
+            <p>The timer changes color to provide visual cues for your speech duration.</p>
+            <ul>
+                <li><strong>Green:</strong> The minimum time has been met.</li>
+                <li><strong>Yellow:</strong> The time is nearing its end. You should begin to wrap up.</li>
+                <li><strong>Red:</strong> The maximum time has been exceeded. You should conclude your speech.</li>
+            </ul>
+        </div>
+    </details>
+
     <div class="controls">
         <div class="input-group">
             <label>Green (s)
@@ -47,6 +60,13 @@
         </label>
     </div>
     
+    <details class="info-details">
+        <summary>About recorded times</summary>
+        <div class="info-content">
+            <p>The list below keeps track of all speakers and their final times. You can remove an entry if a mistake was made or export the entire list to a PDF.</p>
+        </div>
+    </details>
+
     <div id="speakersList">
         <h3>Recorded Times</h3>
         <p id="noSpeakersMsg">No speakers recorded yet.</p>
@@ -56,4 +76,3 @@
     <script src="script.js" defer></script>
 </body>
 </html>
-
