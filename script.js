@@ -14,7 +14,7 @@ const soundToggle = document.getElementById('soundToggle');
 
 // Audio elements
 const greenBell = new Audio('bell_1.mp3');
-const redBell = new Audio('bell_3.mp3');
+const redBell = new Audio('bell_2.mp3');
 
 // Initially disable the stop button
 stopBtn.disabled = true;
@@ -122,3 +122,4 @@ function formatTime(ms) {
 // Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
+
