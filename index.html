@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -14,7 +14,7 @@
         <p>A simple timer to help you track speech and presentation times. It provides clear visual cues and records a log of speakers for easy reference.</p>
     </div>
 
-    <div id="timer">00 <i>hr</i> : 00 <i>min</i> : 00 <i>sec</i></div>
+    <div id="timer">00 <i class="unit">hr</i> : 00 <i class="unit">min</i> : 00 <i class="unit">sec</i></div>
     
     <details class="info-details">
         <summary>How the timer works</summary>
@@ -28,45 +28,44 @@
         </div>
     </details>
 
-    <div class="controls">
-        <div class="input-group">
-            <label>Green
+    <div class="controls-wrapper">
+        <div class="input-grid">
+            <div class="time-input-container">
+                <label>Green</label>
                 <div class="time-input-group">
-                    <input type="number" id="greenHr" value="0" placeholder="00"> <span>hr</span>
-                    <input type="number" id="greenMin" value="1" placeholder="00"> <span>min</span>
-                    <input type="number" id="greenSec" value="0" placeholder="00"> <span>sec</span>
+                    <input type="number" id="greenHr" value="0" min="0" placeholder="00"> <span class="unit">hr</span>
+                    <input type="number" id="greenMin" value="1" min="0" max="59" placeholder="00"> <span class="unit">min</span>
+                    <input type="number" id="greenSec" value="0" min="0" max="59" placeholder="00"> <span class="unit">sec</span>
                 </div>
-            </label>
-            <label>Yellow
+            </div>
+            <div class="time-input-container">
+                <label>Yellow</label>
                 <div class="time-input-group">
-                    <input type="number" id="yellowHr" value="0" placeholder="00"> <span>hr</span>
-                    <input type="number" id="yellowMin" value="1" placeholder="00"> <span>min</span>
-                    <input type="number" id="yellowSec" value="30" placeholder="00"> <span>sec</span>
+                    <input type="number" id="yellowHr" value="0" min="0" placeholder="00"> <span class="unit">hr</span>
+                    <input type="number" id="yellowMin" value="1" min="0" max="59" placeholder="00"> <span class="unit">min</span>
+                    <input type="number" id="yellowSec" value="30" min="0" max="59" placeholder="00"> <span class="unit">sec</span>
                 </div>
-            </label>
-            <label>Red
+            </div>
+            <div class="time-input-container">
+                <label>Red</label>
                 <div class="time-input-group">
-                    <input type="number" id="redHr" value="0" placeholder="00"> <span>hr</span>
-                    <input type="number" id="redMin" value="2" placeholder="00"> <span>min</span>
-                    <input type="number" id="redSec" value="0" placeholder="00"> <span>sec</span>
+                    <input type="number" id="redHr" value="0" min="0" placeholder="00"> <span class="unit">hr</span>
+                    <input type="number" id="redMin" value="2" min="0" max="59" placeholder="00"> <span class="unit">min</span>
+                    <input type="number" id="redSec" value="0" min="0" max="59" placeholder="00"> <span class="unit">sec</span>
                 </div>
-            </label>
+            </div>
         </div>
-        <div class="input-group full-width">
-            <label>Speaker Name
-                <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
-            </label>
+        <div class="full-width">
+            <label for="speakerName">Speaker Name</label>
+            <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
         </div>
-    </div>
-    
-    <div class="controls button-group">
-        <button id="startBtn">Start</button>
-        <button id="stopBtn">Stop & Record</button>
-        <button id="cancelBtn">Cancel</button>
-    </div>
-    
-    <div class="controls">
-        <label class="toggle-container">Sound On
+        <div class="button-group">
+            <button id="startBtn">Start</button>
+            <button id="stopBtn">Stop & Record</button>
+            <button id="cancelBtn">Cancel</button>
+        </div>
+        <label class="toggle-container">
+            Sound On
             <input type="checkbox" id="soundToggle" checked>
             <span class="slider"></span>
         </label>
@@ -79,14 +78,14 @@
         </div>
     </details>
 
-    <div id="speakersList">
+    <div id="speakersListContainer">
         <h3>Recorded Times</h3>
-        <p id="noSpeakersMsg">No speakers recorded yet.</p>
+        <div id="speakersList">
+            <p id="noSpeakersMsg">No speakers recorded yet.</p>
+        </div>
         <button id="exportBtn">Export to PDF</button>
     </div>
 
     <script src="script.js" defer></script>
 </body>
 </html>
-
-
