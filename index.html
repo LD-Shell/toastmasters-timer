@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toastmasters Timer Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div id="timer">00:00</div>
@@ -28,6 +28,13 @@
         <button id="stopBtn">Stop & Record</button>
     </div>
     
+    <div class="controls">
+        <label class="toggle-container">Sound On
+            <input type="checkbox" id="soundToggle" checked>
+            <span class="slider"></span>
+        </label>
+    </div>
+    
     <div id="speakersList">
         <h3>Recorded Times</h3>
         <p id="noSpeakersMsg">No speakers recorded yet.</p>
@@ -35,5 +42,4 @@
 
     <script src="script.js" defer></script>
 </body>
-
 </html>
