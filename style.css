@@ -31,11 +31,25 @@ body {
 
 .controls {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 700px;
+}
+
+/* New: Group inputs together for better layout control */
+.input-group {
+    display: flex;
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    max-width: 700px;
+}
+
+.button-group {
+    gap: 1rem;
 }
 
 label {
@@ -44,8 +58,8 @@ label {
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
-    flex-basis: auto;
-    margin-bottom: 0.5rem;
+    flex: 1; /* Allow labels to grow/shrink equally */
+    min-width: 80px; /* Prevent shrinking too much */
 }
 
 input[type="number"] {
@@ -55,9 +69,10 @@ input[type="number"] {
     background: #1e293b;
     color: var(--text);
     font-size: 1rem;
-    width: 70px;
+    width: 100%; /* Make input take full width of its parent label */
     text-align: center;
     outline: none;
+    box-sizing: border-box;
 }
 
 input[type="text"] {
@@ -67,10 +82,10 @@ input[type="text"] {
     background: #1e293b;
     color: var(--text);
     font-size: 1rem;
-    width: calc(100% - 2rem);
-    max-width: 250px;
+    width: 100%;
     text-align: center;
     outline: none;
+    box-sizing: border-box;
 }
 
 input:focus {
@@ -141,14 +156,14 @@ button:hover {
     margin-left: 1rem;
 }
 
-/* New CSS for the toggle switch */
+/* Sound toggle container and styles */
 .toggle-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
+    flex-direction: row; /* Keep text and toggle side-by-side on all screens */
 }
 
 .toggle-container input {
@@ -158,18 +173,18 @@ button:hover {
 .slider {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
-    background-color: #ccc;
-    border-radius: 34px;
+    width: 44px; /* Reduced width for a more compact toggle */
+    height: 24px; /* Reduced height */
+    background-color: #555; /* A subtle grey for a modern look */
+    border-radius: 24px;
     transition: background-color 0.4s;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 16px; /* Reduced size */
+    width: 16px; /* Reduced size */
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -182,7 +197,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(20px); /* Adjusted transform */
 }
 
 /* --- Media Queries for Mobile Responsiveness --- */
@@ -202,16 +217,23 @@ input:checked + .slider:before {
         align-items: stretch;
         gap: 0.8rem;
     }
+    
+    .input-group, .button-group {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
 
     label {
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
         margin-bottom: 0;
     }
 
     input[type="number"],
     input[type="text"] {
-        width: 100%;
-        max-width: unset;
+        width: auto;
+        max-width: 100px;
     }
 
     button {
@@ -228,29 +250,30 @@ input:checked + .slider:before {
     .speaker-entry span {
         font-size: 0.9rem;
     }
+
+    .toggle-container {
+        justify-content: space-between;
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
     #timer {
         font-size: 2.8rem;
     }
+    
+    .input-group, .button-group {
+        flex-direction: column;
+    }
 
+    label {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    
     input[type="number"] {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-    }
-
-    input[type="text"] {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-    }
-
-    button {
-        font-size: 0.9rem;
-        padding: 0.6rem 0.8rem;
-    }
-
-    .speaker-entry span {
-        font-size: 0.85rem;
+        max-width: 80px;
     }
 }
