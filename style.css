@@ -7,6 +7,9 @@
     --text: #f8fafc;
     --border: #334155;
     --shadow: rgba(0, 0, 0, 0.25);
+    --input-bg: rgba(30, 41, 59, 0.7);
+    --list-bg: rgba(30, 41, 59, 0.7);
+    --cancel-btn: #475569;
 }
 
 body {
@@ -25,13 +28,33 @@ body {
     box-sizing: border-box;
 }
 
+.welcome-container {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 2rem;
+    color: #cbd5e1;
+}
+
+.welcome-container h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+}
+
+.welcome-container p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+}
+
 /* Timer */
 #timer {
     font-size: 5rem;
     font-weight: 700;
     text-align: center;
     letter-spacing: 2px;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* Controls Layout */
@@ -74,8 +97,7 @@ input[type="text"] {
     padding: 0.6rem;
     border-radius: 10px;
     border: 1px solid var(--border);
-    /* The fix: Use a fixed semi-transparent background */
-    background: rgba(30, 41, 59, 0.7);
+    background: var(--input-bg);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     color: var(--text);
@@ -122,13 +144,21 @@ button:hover {
     background: linear-gradient(145deg, #dc2626, #7f1d1d);
 }
 
+#cancelBtn {
+    background: var(--cancel-btn);
+}
+
+#cancelBtn:hover {
+    background: #64748b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 /* Speakers List */
 #speakersList {
     margin-top: 1rem;
     padding: 1.2rem;
     border-radius: 12px;
-    /* The fix: Use a fixed semi-transparent background */
-    background: rgba(30, 41, 59, 0.7); 
+    background: var(--list-bg);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     width: 100%;
@@ -159,15 +189,48 @@ button:hover {
     border-bottom: none;
 }
 
-.speaker-entry span {
+.speaker-entry-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.speaker-entry-info .number {
+    font-weight: 700;
+    color: var(--yellow);
+    font-size: 1.2rem;
+}
+
+.speaker-entry-info span {
     font-size: 1rem;
     word-break: break-word;
+}
+
+.speaker-entry-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .speaker-entry .time {
     font-weight: 700;
     flex-shrink: 0;
-    margin-left: 1rem;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.delete-btn:hover {
+    transform: scale(1.2);
+    color: #b91c1c;
 }
 
 /* Toggle Switch */
@@ -251,7 +314,7 @@ input:checked + .slider:before {
         padding: 0.8rem;
         max-height: 250px;
     }
-    .speaker-entry span {
+    .speaker-entry-info span {
         font-size: 0.9rem;
     }
     .toggle-container {
