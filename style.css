@@ -4,7 +4,6 @@
     --red: #ef4444;
     --darkred: #991b1b;
     --bg: #0f172a;
-    --bg-panel: rgba(30, 41, 59, 0.9);
     --text: #f8fafc;
     --border: #334155;
     --shadow: rgba(0, 0, 0, 0.25);
@@ -18,7 +17,7 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(160deg, #0f172a, #1e293b);
+    background: var(--bg);
     color: var(--text);
     transition: background-color 1s ease;
     gap: 1.5rem;
@@ -26,7 +25,7 @@ body {
     box-sizing: border-box;
 }
 
-/* Timer Display */
+/* Timer */
 #timer {
     font-size: 5rem;
     font-weight: 700;
@@ -35,7 +34,7 @@ body {
     text-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* Control Layout */
+/* Controls Layout */
 .controls {
     display: flex;
     justify-content: center;
@@ -58,7 +57,7 @@ body {
     gap: 1rem;
 }
 
-/* Label + Inputs */
+/* Labels + Inputs */
 label {
     font-size: 0.9rem;
     display: flex;
@@ -75,14 +74,16 @@ input[type="text"] {
     padding: 0.6rem;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: var(--bg-panel);
+    background: inherit; /* follow timer background */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     color: var(--text);
     font-size: 1rem;
     width: 100%;
     text-align: center;
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s, background 1s ease;
 }
 
 input:focus {
@@ -120,20 +121,36 @@ button:hover {
     background: linear-gradient(145deg, #dc2626, #7f1d1d);
 }
 
-/* Speakers List */
+/* Speakers List (inherits timer bg) */
 #speakersList {
     margin-top: 1rem;
     padding: 1.2rem;
     border-radius: 12px;
-    background: var(--bg-panel);
+    background: inherit; /* inherits live background color */
     backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     width: 100%;
     max-width: 600px;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 4px 10px var(--shadow);
     box-sizing: border-box;
+    position: relative;
+}
+
+/* Dark overlay for readability */
+#speakersList::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: inherit;
+    z-index: 0;
+}
+#speakersList > * {
+    position: relative;
+    z-index: 1;
 }
 
 #speakersList h3 {
@@ -238,6 +255,13 @@ input:checked + .slider:before {
     }
     button {
         width: 100%;
+    }
+    #speakersList {
+        padding: 0.8rem;
+        max-height: 250px;
+    }
+    .speaker-entry span {
+        font-size: 0.9rem;
     }
 }
 
