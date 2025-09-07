@@ -58,7 +58,7 @@ function startTimer() {
 
     interval = setInterval(() => {
         let elapsed = Date.now() - start;
-        timerDisplay.textContent = formatTime(elapsed);
+        timerDisplay.textContent = formatTime_old(elapsed); // The main timer uses the mm:ss format
 
         // Green phase
         if (elapsed < greenTime) {
@@ -113,7 +113,7 @@ function stopAndRecord() {
                 <span>${speakerName || 'Unnamed Speaker'}</span>
             </div>
             <div class="speaker-entry-controls">
-                <span class="time">${formatTime(finalTime)}</span>
+                <span class="time">${formatTime_readable(finalTime)}</span>
                 <button class="delete-btn" onclick="deleteEntry(this)">&times;</button>
             </div>
         `;
@@ -141,11 +141,37 @@ function resetTimerState() {
     cancelBtn.disabled = true;
 }
 
-function formatTime(ms) {
+// Formats time for the main timer display (MM:SS)
+function formatTime_old(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
     let seconds = String(totalSeconds % 60).padStart(2, "0");
     return `${minutes}:${seconds}`;
+}
+
+// New: Formats time for the recorded entries (more readable)
+function formatTime_readable(ms) {
+    let totalSeconds = Math.floor(ms / 1000);
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+    
+    let parts = [];
+    if (hours > 0) {
+        parts.push(`${hours} hr${hours > 1 ? 's' : ''}`);
+    }
+    if (minutes > 0) {
+        parts.push(`${minutes} min${minutes > 1 ? 's' : ''}`);
+    }
+    if (seconds > 0) {
+        parts.push(`${seconds} sec${seconds > 1 ? 's' : ''}`);
+    }
+
+    if (parts.length === 0) {
+        return "0 secs";
+    }
+    
+    return parts.join(" ");
 }
 
 function deleteEntry(btn) {
@@ -175,30 +201,52 @@ function reorderEntries() {
 
 // New function to export the recorded times as a PDF
 function exportToPDF() {
-    // A4 dimensions in pt (595 x 842)
+    if (speakersList.querySelectorAll('.speaker-entry').length === 0) {
+        alert("There are no recorded times to export!");
+        return;
+    }
+
     const doc = new jsPDF();
     let yPos = 20;
 
-    doc.setFontSize(22);
-    doc.text("Presentation Timer Report", 20, yPos);
+    // Report Title
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(24);
+    doc.text("Presentation Report", 20, yPos);
     yPos += 15;
 
+    // Date
+    doc.setFont("Helvetica", "normal");
     doc.setFontSize(12);
-    doc.text("Recorded Times:", 20, yPos);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPos);
+    yPos += 10;
+    
+    // Horizontal line
+    doc.line(20, yPos, 190, yPos);
     yPos += 10;
 
+    // Column Headers
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("No.", 20, yPos);
+    doc.text("Speaker Name", 40, yPos);
+    doc.text("Time", 150, yPos);
+    yPos += 8;
+
+    // Speaker entries
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(12);
     const entries = speakersList.querySelectorAll('.speaker-entry');
-    if (entries.length === 0) {
-        doc.text("No speakers recorded.", 20, yPos);
-    } else {
-        entries.forEach((entry, index) => {
-            const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
-            const time = entry.querySelector('.time').textContent.trim();
-            const text = `${index + 1}. ${name} - ${time}`;
-            doc.text(text, 25, yPos);
-            yPos += 8;
-        });
-    }
+    entries.forEach((entry) => {
+        const number = entry.querySelector('.number').textContent.trim();
+        const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
+        const time = entry.querySelector('.time').textContent.trim();
+
+        doc.text(number, 20, yPos);
+        doc.text(name, 40, yPos);
+        doc.text(time, 150, yPos);
+        yPos += 8;
+    });
 
     doc.save("presentation-timer-report.pdf");
 }
