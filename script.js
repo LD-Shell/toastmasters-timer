@@ -1,19 +1,27 @@
 let interval, start, isRunning = false;
+let greenSoundPlayed = false;
+let yellowSoundPlayed = false;
+let redSoundPlayed = false;
 
-// Element selectors are now at the top for cleaner code.
+// Element selectors
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const timerDisplay = document.getElementById('timer');
 const speakerNameInput = document.getElementById('speakerName');
 const speakersList = document.getElementById('speakersList');
 const noSpeakersMsg = document.getElementById('noSpeakersMsg');
+const soundToggle = document.getElementById('soundToggle');
+
+// Audio elements
+const greenBell = new Audio('bell_1.mp3');
+const redBell = new Audio('bell_3.mp3');
 
 // Initially disable the stop button
-stopBtn.disabled = true; 
+stopBtn.disabled = true;
 
 function startTimer() {
-    if (isRunning) return; 
-    
+    if (isRunning) return;
+
     const speakerName = speakerNameInput.value.trim();
     if (!speakerName) {
         alert("Please enter a speaker's name to begin!");
@@ -24,9 +32,14 @@ function startTimer() {
     start = Date.now();
     isRunning = true;
     
+    // Reset sound flags
+    greenSoundPlayed = false;
+    yellowSoundPlayed = false;
+    redSoundPlayed = false;
+
     startBtn.disabled = true;
     stopBtn.disabled = false;
-    
+
     const greenTime = parseInt(document.getElementById("greenTime").value) * 1000;
     const yellowTime = greenTime + parseInt(document.getElementById("yellowTime").value) * 1000;
     const redTime = yellowTime + parseInt(document.getElementById("redTime").value) * 1000;
@@ -37,18 +50,38 @@ function startTimer() {
         let elapsed = Date.now() - start;
         timerDisplay.textContent = formatTime(elapsed);
 
+        // Green phase
         if (elapsed < greenTime) {
             document.body.style.backgroundColor = "var(--green)";
             document.body.style.color = "#fff";
-        } else if (elapsed < yellowTime) {
+        }
+        // Yellow phase
+        else if (elapsed >= greenTime && elapsed < yellowTime) {
             document.body.style.backgroundColor = "var(--yellow)";
             document.body.style.color = "#000";
-        } else if (elapsed < redTime) {
+            if (!greenSoundPlayed && soundToggle.checked) {
+                greenBell.play();
+                greenSoundPlayed = true;
+            }
+        }
+        // Red phase
+        else if (elapsed >= yellowTime && elapsed < redTime) {
             document.body.style.backgroundColor = "var(--red)";
             document.body.style.color = "#fff";
-        } else {
+            if (!yellowSoundPlayed && soundToggle.checked) {
+                // For yellow, we'll use the same sound as green per Toastmasters rules.
+                greenBell.play();
+                yellowSoundPlayed = true;
+            }
+        }
+        // Overtime (Red)
+        else {
             document.body.style.backgroundColor = "var(--darkred)";
             document.body.style.color = "#fff";
+            if (!redSoundPlayed && soundToggle.checked) {
+                redBell.play();
+                redSoundPlayed = true;
+            }
         }
     }, 200);
 }
@@ -86,6 +119,6 @@ function formatTime(ms) {
     return `${minutes}:${seconds}`;
 }
 
-// Event listeners are a best practice for clean separation of concerns.
+// Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
