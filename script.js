@@ -50,9 +50,18 @@ function startTimer() {
     cancelBtn.disabled = false;
     exportBtn.disabled = true;
 
-    const greenTime = parseInt(document.getElementById("greenTime").value) * 1000;
-    const yellowTime = greenTime + parseInt(document.getElementById("yellowTime").value) * 1000;
-    const redTime = yellowTime + parseInt(document.getElementById("redTime").value) * 1000;
+    // Get values from new minute/second inputs and calculate total milliseconds
+    const greenTimeMin = parseInt(document.getElementById("greenMin").value) || 0;
+    const greenTimeSec = parseInt(document.getElementById("greenSec").value) || 0;
+    const greenMarker = (greenTimeMin * 60 + greenTimeSec) * 1000;
+
+    const yellowTimeMin = parseInt(document.getElementById("yellowMin").value) || 0;
+    const yellowTimeSec = parseInt(document.getElementById("yellowSec").value) || 0;
+    const yellowMarker = (yellowTimeMin * 60 + yellowTimeSec) * 1000;
+
+    const redTimeMin = parseInt(document.getElementById("redMin").value) || 0;
+    const redTimeSec = parseInt(document.getElementById("redSec").value) || 0;
+    const redMarker = (redTimeMin * 60 + redTimeSec) * 1000;
 
     // Set a default background and text color on start
     document.body.style.backgroundColor = "var(--bg)";
@@ -62,33 +71,29 @@ function startTimer() {
         let elapsed = Date.now() - start;
         timerDisplay.textContent = formatTime_old(elapsed);
 
-        // Check conditions in the correct order (red, then yellow, then green)
-        if (elapsed >= redTime) {
+        // Check conditions in the correct order
+        if (elapsed >= redMarker) {
             document.body.style.backgroundColor = "var(--darkred)";
             document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
+            if (!redSoundPlayed && soundToggle.checked) {
+                redBell.play();
+                redSoundPlayed = true;
+            }
         }
-        else if (elapsed >= yellowTime) {
-            document.body.style.backgroundColor = "var(--red)";
-            document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
-        }
-        else if (elapsed >= greenTime) {
+        else if (elapsed >= yellowMarker) {
             document.body.style.backgroundColor = "var(--yellow)";
             document.body.style.setProperty('--dynamic-text-color', '#0f172a');
-        }
-        
-        // Sound logic
-        if (soundToggle.checked) {
-            if (elapsed >= greenTime && !greenSoundPlayed) {
-                greenBell.play();
-                greenSoundPlayed = true;
-            }
-            if (elapsed >= yellowTime && !yellowSoundPlayed) {
+            if (!yellowSoundPlayed && soundToggle.checked) {
                 greenBell.play();
                 yellowSoundPlayed = true;
             }
-            if (elapsed >= redTime && !redSoundPlayed) {
-                redBell.play();
-                redSoundPlayed = true;
+        }
+        else if (elapsed >= greenMarker) {
+            document.body.style.backgroundColor = "var(--green)";
+            document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
+            if (!greenSoundPlayed && soundToggle.checked) {
+                greenBell.play();
+                greenSoundPlayed = true;
             }
         }
     }, 200);
@@ -136,6 +141,12 @@ function resetTimerState() {
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
+    document.getElementById("greenMin").value = 1;
+    document.getElementById("greenSec").value = 0;
+    document.getElementById("yellowMin").value = 1;
+    document.getElementById("yellowSec").value = 30;
+    document.getElementById("redMin").value = 2;
+    document.getElementById("redSec").value = 0;
     startBtn.disabled = false;
     stopBtn.disabled = true;
     cancelBtn.disabled = true;
