@@ -1,3 +1,6 @@
+// window.jsPDF is a global object from the CDN script
+const { jsPDF } = window.jspdf;
+
 let interval, start, isRunning = false;
 let greenSoundPlayed = false;
 let yellowSoundPlayed = false;
@@ -8,6 +11,7 @@ let speakerCount = 0;
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const cancelBtn = document.getElementById('cancelBtn');
+const exportBtn = document.getElementById('exportBtn');
 const timerDisplay = document.getElementById('timer');
 const speakerNameInput = document.getElementById('speakerName');
 const speakersList = document.getElementById('speakersList');
@@ -18,9 +22,10 @@ const soundToggle = document.getElementById('soundToggle');
 const greenBell = new Audio('bell_1.mp3');
 const redBell = new Audio('bell_2.mp3');
 
-// Initially disable the stop and cancel buttons
+// Initially disable the stop, cancel, and export buttons
 stopBtn.disabled = true;
 cancelBtn.disabled = true;
+exportBtn.disabled = true;
 
 function startTimer() {
     if (isRunning) return;
@@ -43,6 +48,7 @@ function startTimer() {
     startBtn.disabled = true;
     stopBtn.disabled = false;
     cancelBtn.disabled = false;
+    exportBtn.disabled = true;
 
     const greenTime = parseInt(document.getElementById("greenTime").value) * 1000;
     const yellowTime = greenTime + parseInt(document.getElementById("yellowTime").value) * 1000;
@@ -113,6 +119,7 @@ function stopAndRecord() {
         `;
         speakersList.appendChild(newEntry);
         noSpeakersMsg.style.display = 'none';
+        exportBtn.disabled = false;
     }
 
     resetTimerState();
@@ -145,13 +152,59 @@ function deleteEntry(btn) {
     const entry = btn.closest('.speaker-entry');
     if (entry) {
         entry.remove();
+        reorderEntries();
         if (speakersList.children.length === 1) {
             noSpeakersMsg.style.display = 'block';
+            exportBtn.disabled = true;
         }
     }
+}
+
+// Reorders the speaker numbers after an entry is deleted
+function reorderEntries() {
+    const entries = speakersList.querySelectorAll('.speaker-entry');
+    speakerCount = 0;
+    entries.forEach((entry, index) => {
+        const numberSpan = entry.querySelector('.number');
+        if (numberSpan) {
+            numberSpan.textContent = `${index + 1}.`;
+        }
+    });
+    speakerCount = entries.length;
+}
+
+// New function to export the recorded times as a PDF
+function exportToPDF() {
+    // A4 dimensions in pt (595 x 842)
+    const doc = new jsPDF();
+    let yPos = 20;
+
+    doc.setFontSize(22);
+    doc.text("Presentation Timer Report", 20, yPos);
+    yPos += 15;
+
+    doc.setFontSize(12);
+    doc.text("Recorded Times:", 20, yPos);
+    yPos += 10;
+
+    const entries = speakersList.querySelectorAll('.speaker-entry');
+    if (entries.length === 0) {
+        doc.text("No speakers recorded.", 20, yPos);
+    } else {
+        entries.forEach((entry, index) => {
+            const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
+            const time = entry.querySelector('.time').textContent.trim();
+            const text = `${index + 1}. ${name} - ${time}`;
+            doc.text(text, 25, yPos);
+            yPos += 8;
+        });
+    }
+
+    doc.save("presentation-timer-report.pdf");
 }
 
 // Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
+exportBtn.addEventListener('click', exportToPDF);
