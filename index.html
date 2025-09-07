@@ -9,21 +9,27 @@
 </head>
 <body>
     <div id="timer">00:00</div>
+
     <div class="controls">
-        <label>Green (s)
-            <input type="number" id="greenTime" value="60">
-        </label>
-        <label>Yellow (s)
-            <input type="number" id="yellowTime" value="30">
-        </label>
-        <label>Red (s)
-            <input type="number" id="redTime" value="30">
-        </label>
+        <div class="input-group">
+            <label>Green (s)
+                <input type="number" id="greenTime" value="60">
+            </label>
+            <label>Yellow (s)
+                <input type="number" id="yellowTime" value="30">
+            </label>
+            <label>Red (s)
+                <input type="number" id="redTime" value="30">
+            </label>
+        </div>
+        <div class="input-group full-width">
+            <label>Speaker Name
+                <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
+            </label>
+        </div>
     </div>
-    <div class="controls">
-        <label>Speaker Name
-            <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
-        </label>
+    
+    <div class="controls button-group">
         <button id="startBtn">Start</button>
         <button id="stopBtn">Stop & Record</button>
     </div>
