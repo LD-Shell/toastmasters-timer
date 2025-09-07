@@ -120,7 +120,7 @@ function stopAndRecord() {
                 <span>${speakerName || 'Unnamed Speaker'}</span>
             </div>
             <div class="speaker-entry-controls">
-                <span class="time">${formatTime(finalTime)}</span>
+                <span class="time">${formatTime(finalTime, false)}</span>
                 <button class="delete-btn" onclick="deleteEntry(this)">&times;</button>
             </div>
         `;
@@ -144,21 +144,15 @@ function resetTimerState() {
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
-    greenHrInput.value = 0;
-    greenMinInput.value = 1;
-    greenSecInput.value = 0;
-    yellowHrInput.value = 0;
-    yellowMinInput.value = 1;
-    yellowSecInput.value = 30;
-    redHrInput.value = 0;
-    redMinInput.value = 2;
-    redSecInput.value = 0;
+    
+    // THE TIME INPUTS ARE NO LONGER RESET HERE
+    
     startBtn.disabled = false;
     stopBtn.disabled = true;
     cancelBtn.disabled = true;
 }
 
-// New: Formats time for the main timer and recorded entries (HH hr : MM min : SS sec)
+// Formats time for the main timer and recorded entries
 function formatTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let hours = Math.floor(totalSeconds / 3600);
@@ -169,7 +163,6 @@ function formatTime(ms) {
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
     
-    // Using <i> tag for italics
     return `${hours} <i>hr</i> : ${minutes} <i>min</i> : ${seconds} <i>sec</i>`;
 }
 
@@ -178,14 +171,13 @@ function deleteEntry(btn) {
     if (entry) {
         entry.remove();
         reorderEntries();
-        if (speakersList.children.length === 1) {
+        if (speakersList.children.length <= 1) { // Check if only the message is left
             noSpeakersMsg.style.display = 'block';
             exportBtn.disabled = true;
         }
     }
 }
 
-// Reorders the speaker numbers after an entry is deleted
 function reorderEntries() {
     const entries = speakersList.querySelectorAll('.speaker-entry');
     speakerCount = 0;
@@ -198,7 +190,6 @@ function reorderEntries() {
     speakerCount = entries.length;
 }
 
-// New function to export the recorded times as a PDF
 function exportToPDF() {
     if (speakersList.querySelectorAll('.speaker-entry').length === 0) {
         alert("There are no recorded times to export!");
@@ -208,23 +199,19 @@ function exportToPDF() {
     const doc = new jsPDF();
     let yPos = 20;
 
-    // Report Title
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(24);
     doc.text("Timer's report", 20, yPos);
     yPos += 15;
 
-    // Date
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(12);
     doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPos);
     yPos += 10;
     
-    // Horizontal line
     doc.line(20, yPos, 190, yPos);
     yPos += 10;
 
-    // Column Headers
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(14);
     doc.text("No.", 20, yPos);
@@ -232,14 +219,15 @@ function exportToPDF() {
     doc.text("Time", 150, yPos);
     yPos += 8;
 
-    // Speaker entries
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(12);
     const entries = speakersList.querySelectorAll('.speaker-entry');
     entries.forEach((entry) => {
         const number = entry.querySelector('.number').textContent.trim();
         const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
-        const time = entry.querySelector('.time').textContent.trim();
+        const time = entry.querySelector('.time').textContent.replace(/\s*(hr|min|sec)\s*/g, (match, p1) => {
+            return p1.substring(0, 1) + ' '; // Replace hr, min, sec with h, m, s
+        }).replace(/:/g, '');
 
         doc.text(number, 20, yPos);
         doc.text(name, 40, yPos);
@@ -250,34 +238,40 @@ function exportToPDF() {
     doc.save("presentation-timer-report.pdf");
 }
 
-// Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
 
-
-// Logic to handle live updates and validation for timing inputs
 function setupInputListeners(hrInput, minInput, secInput) {
     hrInput.addEventListener('input', () => {
         if (hrInput.value < 0) hrInput.value = 0;
     });
+
     minInput.addEventListener('input', () => {
         if (minInput.value < 0) minInput.value = 0;
         if (minInput.value >= 60) {
             let hoursToAdd = Math.floor(minInput.value / 60);
             let newMinutes = minInput.value % 60;
-            hrInput.value = parseInt(hrInput.value) + hoursToAdd;
+            hrInput.value = parseInt(hrInput.value || 0) + hoursToAdd;
             minInput.value = newMinutes;
         }
     });
+    
     secInput.addEventListener('input', () => {
         if (secInput.value < 0) secInput.value = 0;
         if (secInput.value >= 60) {
             let minutesToAdd = Math.floor(secInput.value / 60);
             let newSeconds = secInput.value % 60;
-            minInput.value = parseInt(minInput.value) + minutesToAdd;
+            minInput.value = parseInt(minInput.value || 0) + minutesToAdd;
             secInput.value = newSeconds;
+            // Re-check minutes in case seconds pushed it over 60
+            if (minInput.value >= 60) {
+                let hoursToAdd = Math.floor(minInput.value / 60);
+                let newMinutes = minInput.value % 60;
+                hrInput.value = parseInt(hrInput.value || 0) + hoursToAdd;
+                minInput.value = newMinutes;
+            }
         }
     });
 
@@ -291,8 +285,6 @@ function setupInputListeners(hrInput, minInput, secInput) {
     });
 }
 
-// Apply the listeners to all three sets of inputs
 setupInputListeners(greenHrInput, greenMinInput, greenSecInput);
 setupInputListeners(yellowHrInput, yellowMinInput, yellowSecInput);
 setupInputListeners(redHrInput, redMinInput, redSecInput);
-
