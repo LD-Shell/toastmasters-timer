@@ -10,7 +10,7 @@ let speakerCount = 0;
 // Element selectors
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
-const cancelBtn = document.getElementById('cancelBtn');
+const cancelBtn = document['getElementById']('cancelBtn');
 const exportBtn = document.getElementById('exportBtn');
 const timerDisplay = document.getElementById('timer');
 const speakerNameInput = document.getElementById('speakerName');
@@ -69,7 +69,7 @@ function startTimer() {
 
     interval = setInterval(() => {
         let elapsed = Date.now() - start;
-        timerDisplay.textContent = formatTime(elapsed);
+        timerDisplay.innerHTML = formatTime(elapsed); // Use innerHTML for italics
 
         // Check conditions in the correct order
         if (elapsed >= redMarker) {
@@ -137,7 +137,7 @@ function cancelTimer() {
 }
 
 function resetTimerState() {
-    timerDisplay.textContent = "00:00:00";
+    timerDisplay.innerHTML = `00 <i>hr</i> : 00 <i>min</i> : 00 <i>sec</i>`;
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
@@ -152,7 +152,7 @@ function resetTimerState() {
     cancelBtn.disabled = true;
 }
 
-// New: Formats time for the main timer and recorded entries (HH:MM:SS)
+// New: Formats time for the main timer and recorded entries (HH hr : MM min : SS sec)
 function formatTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let hours = Math.floor(totalSeconds / 3600);
@@ -163,7 +163,8 @@ function formatTime(ms) {
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
     
-    return `${hours}:${minutes}:${seconds}`;
+    // Using <i> tag for italics
+    return `${hours} <i>hr</i> : ${minutes} <i>min</i> : ${seconds} <i>sec</i>`;
 }
 
 function deleteEntry(btn) {
@@ -232,11 +233,12 @@ function exportToPDF() {
     entries.forEach((entry) => {
         const number = entry.querySelector('.number').textContent.trim();
         const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
-        const time = entry.querySelector('.time').textContent.trim();
+        const rawTimeHTML = entry.querySelector('.time').innerHTML; // Get HTML
+        const timeText = rawTimeHTML.replace(/<\/?i>/g, ''); // Remove <i> tags for PDF
 
         doc.text(number, 20, yPos);
         doc.text(name, 40, yPos);
-        doc.text(time, 150, yPos);
+        doc.text(timeText, 150, yPos); // Use plain text for PDF
         yPos += 8;
     });
 
