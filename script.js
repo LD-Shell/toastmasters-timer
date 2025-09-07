@@ -69,7 +69,6 @@ function startTimer() {
             document.body.style.backgroundColor = "var(--red)";
             document.body.style.color = "#fff";
             if (!yellowSoundPlayed && soundToggle.checked) {
-                // For yellow, we'll use the same sound as green per Toastmasters rules.
                 greenBell.play();
                 yellowSoundPlayed = true;
             }
@@ -122,4 +121,3 @@ function formatTime(ms) {
 // Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
-
