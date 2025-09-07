@@ -136,7 +136,7 @@ body {
     gap: 1rem;
 }
 
-/* New: container for min/sec inputs */
+/* New: container for hr/min/sec inputs */
 .time-input-group {
     display: flex;
     align-items: center;
@@ -165,9 +165,12 @@ body {
     text-align: center;
     font-size: 1rem;
     padding: 0.6rem;
-    width: calc(50% - 10px);
+    width: calc(33.33% - 10px);
     outline: none;
 }
+
+.time-input-group input:nth-of-type(1) { width: calc(33.33% - 10px); }
+.time-input-group input:nth-of-type(2), .time-input-group input:nth-of-type(3) { width: calc(33.33% - 10px); }
 
 .time-input-group span {
     font-size: 1rem;
@@ -425,9 +428,11 @@ input:checked + .slider:before {
         justify-content: space-between;
     }
     .time-input-group {
-        width: 120px;
+        width: 160px;
     }
-    input[type="number"],
+    .time-input-group input {
+        width: calc(33.33% - 10px);
+    }
     input[type="text"] {
         width: auto;
         max-width: 120px;
@@ -463,8 +468,10 @@ input:checked + .slider:before {
         align-items: center;
     }
     .time-input-group {
-        flex-grow: 1;
         width: auto;
+    }
+    .time-input-group input {
+        width: 60px;
     }
     input[type="number"] {
         max-width: 80px;
