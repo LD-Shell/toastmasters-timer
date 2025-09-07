@@ -2,10 +2,12 @@ let interval, start, isRunning = false;
 let greenSoundPlayed = false;
 let yellowSoundPlayed = false;
 let redSoundPlayed = false;
+let speakerCount = 0;
 
 // Element selectors
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
+const cancelBtn = document.getElementById('cancelBtn');
 const timerDisplay = document.getElementById('timer');
 const speakerNameInput = document.getElementById('speakerName');
 const speakersList = document.getElementById('speakersList');
@@ -16,8 +18,9 @@ const soundToggle = document.getElementById('soundToggle');
 const greenBell = new Audio('bell_1.mp3');
 const redBell = new Audio('bell_2.mp3');
 
-// Initially disable the stop button
+// Initially disable the stop and cancel buttons
 stopBtn.disabled = true;
+cancelBtn.disabled = true;
 
 function startTimer() {
     if (isRunning) return;
@@ -39,6 +42,7 @@ function startTimer() {
 
     startBtn.disabled = true;
     stopBtn.disabled = false;
+    cancelBtn.disabled = false;
 
     const greenTime = parseInt(document.getElementById("greenTime").value) * 1000;
     const yellowTime = greenTime + parseInt(document.getElementById("yellowTime").value) * 1000;
@@ -94,21 +98,40 @@ function stopAndRecord() {
     const speakerName = speakerNameInput.value.trim();
 
     if (finalTime > 0) {
+        speakerCount++;
         const newEntry = document.createElement('div');
         newEntry.classList.add('speaker-entry');
         newEntry.innerHTML = `
-            <span>${speakerName || 'Unnamed Speaker'}</span>
-            <span class="time">${formatTime(finalTime)}</span>
+            <div class="speaker-entry-info">
+                <span class="number">${speakerCount}.</span>
+                <span>${speakerName || 'Unnamed Speaker'}</span>
+            </div>
+            <div class="speaker-entry-controls">
+                <span class="time">${formatTime(finalTime)}</span>
+                <button class="delete-btn" onclick="deleteEntry(this)">&times;</button>
+            </div>
         `;
         speakersList.appendChild(newEntry);
         noSpeakersMsg.style.display = 'none';
     }
 
+    resetTimerState();
+}
+
+function cancelTimer() {
+    if (!isRunning) return;
+    clearInterval(interval);
+    isRunning = false;
+    resetTimerState();
+}
+
+function resetTimerState() {
     timerDisplay.textContent = "00:00";
     document.body.style.backgroundColor = "var(--bg)";
     speakerNameInput.value = "";
     startBtn.disabled = false;
     stopBtn.disabled = true;
+    cancelBtn.disabled = true;
 }
 
 function formatTime(ms) {
@@ -118,6 +141,17 @@ function formatTime(ms) {
     return `${minutes}:${seconds}`;
 }
 
+function deleteEntry(btn) {
+    const entry = btn.closest('.speaker-entry');
+    if (entry) {
+        entry.remove();
+        if (speakersList.children.length === 1) {
+            noSpeakersMsg.style.display = 'block';
+        }
+    }
+}
+
 // Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
+cancelBtn.addEventListener('click', cancelTimer);
