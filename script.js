@@ -211,7 +211,7 @@ function exportToPDF() {
     // Report Title
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(24);
-    doc.text("Presentation Report", 20, yPos);
+    doc.text("Timer's report", 20, yPos);
     yPos += 15;
 
     // Date
@@ -295,3 +295,4 @@ function setupInputListeners(hrInput, minInput, secInput) {
 setupInputListeners(greenHrInput, greenMinInput, greenSecInput);
 setupInputListeners(yellowHrInput, yellowMinInput, yellowSecInput);
 setupInputListeners(redHrInput, redMinInput, redSecInput);
+
