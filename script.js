@@ -54,40 +54,39 @@ function startTimer() {
     const yellowTime = greenTime + parseInt(document.getElementById("yellowTime").value) * 1000;
     const redTime = yellowTime + parseInt(document.getElementById("redTime").value) * 1000;
 
+    // Set a default background and text color on start
     document.body.style.backgroundColor = "var(--bg)";
+    document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
 
     interval = setInterval(() => {
         let elapsed = Date.now() - start;
-        timerDisplay.textContent = formatTime_old(elapsed); // The main timer uses the mm:ss format
+        timerDisplay.textContent = formatTime_old(elapsed);
 
-        // Green phase
-        if (elapsed < greenTime) {
-            document.body.style.backgroundColor = "var(--green)";
-            document.body.style.color = "#fff";
+        // Check conditions in the correct order (red, then yellow, then green)
+        if (elapsed >= redTime) {
+            document.body.style.backgroundColor = "var(--darkred)";
+            document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
         }
-        // Yellow phase
-        else if (elapsed >= greenTime && elapsed < yellowTime) {
+        else if (elapsed >= yellowTime) {
+            document.body.style.backgroundColor = "var(--red)";
+            document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
+        }
+        else if (elapsed >= greenTime) {
             document.body.style.backgroundColor = "var(--yellow)";
-            document.body.style.color = "#000";
-            if (!greenSoundPlayed && soundToggle.checked) {
+            document.body.style.setProperty('--dynamic-text-color', '#0f172a');
+        }
+        
+        // Sound logic
+        if (soundToggle.checked) {
+            if (elapsed >= greenTime && !greenSoundPlayed) {
                 greenBell.play();
                 greenSoundPlayed = true;
             }
-        }
-        // Red phase
-        else if (elapsed >= yellowTime && elapsed < redTime) {
-            document.body.style.backgroundColor = "var(--red)";
-            document.body.style.color = "#fff";
-            if (!yellowSoundPlayed && soundToggle.checked) {
+            if (elapsed >= yellowTime && !yellowSoundPlayed) {
                 greenBell.play();
                 yellowSoundPlayed = true;
             }
-        }
-        // Overtime (Red)
-        else {
-            document.body.style.backgroundColor = "var(--darkred)";
-            document.body.style.color = "#fff";
-            if (!redSoundPlayed && soundToggle.checked) {
+            if (elapsed >= redTime && !redSoundPlayed) {
                 redBell.play();
                 redSoundPlayed = true;
             }
@@ -135,6 +134,7 @@ function cancelTimer() {
 function resetTimerState() {
     timerDisplay.textContent = "00:00";
     document.body.style.backgroundColor = "var(--bg)";
+    document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
     startBtn.disabled = false;
     stopBtn.disabled = true;
@@ -149,7 +149,7 @@ function formatTime_old(ms) {
     return `${minutes}:${seconds}`;
 }
 
-// New: Formats time for the recorded entries (more readable)
+// Formats time for the recorded entries (more readable)
 function formatTime_readable(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let hours = Math.floor(totalSeconds / 3600);
@@ -212,7 +212,7 @@ function exportToPDF() {
     // Report Title
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(24);
-    doc.text("Timer's Report", 20, yPos);
+    doc.text("Presentation Report", 20, yPos);
     yPos += 15;
 
     // Date
@@ -256,4 +256,3 @@ startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
-
