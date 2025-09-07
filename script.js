@@ -10,13 +10,24 @@ let speakerCount = 0;
 // Element selectors
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
-const cancelBtn = document['getElementById']('cancelBtn');
+const cancelBtn = document.getElementById('cancelBtn');
 const exportBtn = document.getElementById('exportBtn');
 const timerDisplay = document.getElementById('timer');
 const speakerNameInput = document.getElementById('speakerName');
 const speakersList = document.getElementById('speakersList');
 const noSpeakersMsg = document.getElementById('noSpeakersMsg');
 const soundToggle = document.getElementById('soundToggle');
+
+// Timing input selectors
+const greenHrInput = document.getElementById('greenHr');
+const greenMinInput = document.getElementById('greenMin');
+const greenSecInput = document.getElementById('greenSec');
+const yellowHrInput = document.getElementById('yellowHr');
+const yellowMinInput = document.getElementById('yellowMin');
+const yellowSecInput = document.getElementById('yellowSec');
+const redHrInput = document.getElementById('redHr');
+const redMinInput = document.getElementById('redMin');
+const redSecInput = document.getElementById('redSec');
 
 // Audio elements
 const greenBell = new Audio('bell_1.mp3');
@@ -51,17 +62,9 @@ function startTimer() {
     exportBtn.disabled = true;
 
     // Get values from new minute/second inputs and calculate total milliseconds
-    const greenTimeMin = parseInt(document.getElementById("greenMin").value) || 0;
-    const greenTimeSec = parseInt(document.getElementById("greenSec").value) || 0;
-    const greenMarker = (greenTimeMin * 60 + greenTimeSec) * 1000;
-
-    const yellowTimeMin = parseInt(document.getElementById("yellowMin").value) || 0;
-    const yellowTimeSec = parseInt(document.getElementById("yellowSec").value) || 0;
-    const yellowMarker = (yellowTimeMin * 60 + yellowTimeSec) * 1000;
-
-    const redTimeMin = parseInt(document.getElementById("redMin").value) || 0;
-    const redTimeSec = parseInt(document.getElementById("redSec").value) || 0;
-    const redMarker = (redTimeMin * 60 + redTimeSec) * 1000;
+    const greenMarker = (parseInt(greenHrInput.value) * 3600 + parseInt(greenMinInput.value) * 60 + parseInt(greenSecInput.value)) * 1000;
+    const yellowMarker = (parseInt(yellowHrInput.value) * 3600 + parseInt(yellowMinInput.value) * 60 + parseInt(yellowSecInput.value)) * 1000;
+    const redMarker = (parseInt(redHrInput.value) * 3600 + parseInt(redMinInput.value) * 60 + parseInt(redSecInput.value)) * 1000;
 
     // Set a default background and text color on start
     document.body.style.backgroundColor = "var(--bg)";
@@ -69,7 +72,7 @@ function startTimer() {
 
     interval = setInterval(() => {
         let elapsed = Date.now() - start;
-        timerDisplay.innerHTML = formatTime(elapsed); // Use innerHTML for italics
+        timerDisplay.innerHTML = formatTime(elapsed);
 
         // Check conditions in the correct order
         if (elapsed >= redMarker) {
@@ -141,12 +144,15 @@ function resetTimerState() {
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
-    document.getElementById("greenMin").value = 1;
-    document.getElementById("greenSec").value = 0;
-    document.getElementById("yellowMin").value = 1;
-    document.getElementById("yellowSec").value = 30;
-    document.getElementById("redMin").value = 2;
-    document.getElementById("redSec").value = 0;
+    greenHrInput.value = 0;
+    greenMinInput.value = 1;
+    greenSecInput.value = 0;
+    yellowHrInput.value = 0;
+    yellowMinInput.value = 1;
+    yellowSecInput.value = 30;
+    redHrInput.value = 0;
+    redMinInput.value = 2;
+    redSecInput.value = 0;
     startBtn.disabled = false;
     stopBtn.disabled = true;
     cancelBtn.disabled = true;
@@ -233,12 +239,11 @@ function exportToPDF() {
     entries.forEach((entry) => {
         const number = entry.querySelector('.number').textContent.trim();
         const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
-        const rawTimeHTML = entry.querySelector('.time').innerHTML; // Get HTML
-        const timeText = rawTimeHTML.replace(/<\/?i>/g, ''); // Remove <i> tags for PDF
+        const time = entry.querySelector('.time').textContent.trim();
 
         doc.text(number, 20, yPos);
         doc.text(name, 40, yPos);
-        doc.text(timeText, 150, yPos); // Use plain text for PDF
+        doc.text(time, 150, yPos);
         yPos += 8;
     });
 
@@ -250,3 +255,43 @@ startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
+
+
+// Logic to handle live updates and validation for timing inputs
+function setupInputListeners(hrInput, minInput, secInput) {
+    hrInput.addEventListener('input', () => {
+        if (hrInput.value < 0) hrInput.value = 0;
+    });
+    minInput.addEventListener('input', () => {
+        if (minInput.value < 0) minInput.value = 0;
+        if (minInput.value >= 60) {
+            let hoursToAdd = Math.floor(minInput.value / 60);
+            let newMinutes = minInput.value % 60;
+            hrInput.value = parseInt(hrInput.value) + hoursToAdd;
+            minInput.value = newMinutes;
+        }
+    });
+    secInput.addEventListener('input', () => {
+        if (secInput.value < 0) secInput.value = 0;
+        if (secInput.value >= 60) {
+            let minutesToAdd = Math.floor(secInput.value / 60);
+            let newSeconds = secInput.value % 60;
+            minInput.value = parseInt(minInput.value) + minutesToAdd;
+            secInput.value = newSeconds;
+        }
+    });
+
+    const inputs = [hrInput, minInput, secInput];
+    inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+            if (input.value === '' || isNaN(input.value)) {
+                input.value = 0;
+            }
+        });
+    });
+}
+
+// Apply the listeners to all three sets of inputs
+setupInputListeners(greenHrInput, greenMinInput, greenSecInput);
+setupInputListeners(yellowHrInput, yellowMinInput, yellowSecInput);
+setupInputListeners(redHrInput, redMinInput, redSecInput);
