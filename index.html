@@ -25,6 +25,8 @@
                 <li><strong>Yellow:</strong> The time is nearing its end. You should begin to wrap up.</li>
                 <li><strong>Red:</strong> The maximum time has been exceeded. You should conclude your speech.</li>
             </ul>
+            <hr>
+            <p>The list below keeps track of all speakers and their final times. You can remove an entry if a mistake was made or export the entire list to a PDF.</p>
         </div>
     </details>
 
@@ -60,8 +62,7 @@
             <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
         </div>
         <div class="button-group">
-            <button id="startBtn">Start</button>
-            <button id="stopBtn">Stop & Record</button>
+            <button id="mainActionBtn">Start</button>
             <button id="cancelBtn">Cancel</button>
         </div>
         <label class="toggle-container">
@@ -70,13 +71,6 @@
             <span class="slider"></span>
         </label>
     </div>
-    
-    <details class="info-details">
-        <summary>About recorded times</summary>
-        <div class="info-content">
-            <p>The list below keeps track of all speakers and their final times. You can remove an entry if a mistake was made or export the entire list to a PDF.</p>
-        </div>
-    </details>
 
     <div id="speakersListContainer">
         <h3>Recorded Times</h3>
