@@ -51,7 +51,6 @@ function startTimer() {
     start = Date.now();
     isRunning = true;
     
-    // Reset sound flags
     greenSoundPlayed = false;
     yellowSoundPlayed = false;
     redSoundPlayed = false;
@@ -61,12 +60,10 @@ function startTimer() {
     cancelBtn.disabled = false;
     exportBtn.disabled = true;
 
-    // Get values from new minute/second inputs and calculate total milliseconds
     const greenMarker = (parseInt(greenHrInput.value) * 3600 + parseInt(greenMinInput.value) * 60 + parseInt(greenSecInput.value)) * 1000;
     const yellowMarker = (parseInt(yellowHrInput.value) * 3600 + parseInt(yellowMinInput.value) * 60 + parseInt(yellowSecInput.value)) * 1000;
     const redMarker = (parseInt(redHrInput.value) * 3600 + parseInt(redMinInput.value) * 60 + parseInt(redSecInput.value)) * 1000;
 
-    // Set a default background and text color on start
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
 
@@ -74,7 +71,6 @@ function startTimer() {
         let elapsed = Date.now() - start;
         timerDisplay.innerHTML = formatTime(elapsed);
 
-        // Check conditions in the correct order
         if (elapsed >= redMarker) {
             document.body.style.backgroundColor = "var(--darkred)";
             document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
@@ -117,7 +113,7 @@ function stopAndRecord() {
         newEntry.innerHTML = `
             <div class="speaker-entry-info">
                 <span class="number">${speakerCount}.</span>
-                <span>${speakerName || 'Unnamed Speaker'}</span>
+                <span class="name">${speakerName || 'Unnamed Speaker'}</span>
             </div>
             <div class="speaker-entry-controls">
                 <span class="time">${formatTime(finalTime, false)}</span>
@@ -140,19 +136,16 @@ function cancelTimer() {
 }
 
 function resetTimerState() {
-    timerDisplay.innerHTML = `00 <i>hr</i> : 00 <i>min</i> : 00 <i>sec</i>`;
+    timerDisplay.innerHTML = `00 <i class="unit">hr</i> : 00 <i class="unit">min</i> : 00 <i class="unit">sec</i>`;
     document.body.style.backgroundColor = "var(--bg)";
     document.body.style.setProperty('--dynamic-text-color', 'var(--text)');
     speakerNameInput.value = "";
-    
-    // THE TIME INPUTS ARE NO LONGER RESET HERE
     
     startBtn.disabled = false;
     stopBtn.disabled = true;
     cancelBtn.disabled = true;
 }
 
-// Formats time for the main timer and recorded entries
 function formatTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
     let hours = Math.floor(totalSeconds / 3600);
@@ -163,7 +156,7 @@ function formatTime(ms) {
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
     
-    return `${hours} <i>hr</i> : ${minutes} <i>min</i> : ${seconds} <i>sec</i>`;
+    return `${hours} <i class="unit">hr</i> : ${minutes} <i class="unit">min</i> : ${seconds} <i class="unit">sec</i>`;
 }
 
 function deleteEntry(btn) {
@@ -171,7 +164,7 @@ function deleteEntry(btn) {
     if (entry) {
         entry.remove();
         reorderEntries();
-        if (speakersList.children.length <= 1) { // Check if only the message is left
+        if (speakersList.children.length <= 1) {
             noSpeakersMsg.style.display = 'block';
             exportBtn.disabled = true;
         }
@@ -224,10 +217,12 @@ function exportToPDF() {
     const entries = speakersList.querySelectorAll('.speaker-entry');
     entries.forEach((entry) => {
         const number = entry.querySelector('.number').textContent.trim();
-        const name = entry.querySelector('span:not(.time):not(.number)').textContent.trim();
-        const time = entry.querySelector('.time').textContent.replace(/\s*(hr|min|sec)\s*/g, (match, p1) => {
-            return p1.substring(0, 1) + ' '; // Replace hr, min, sec with h, m, s
-        }).replace(/:/g, '');
+        const name = entry.querySelector('.name').textContent.trim();
+        const time = entry.querySelector('.time').textContent.trim()
+            .replace(/hr/g, 'h')
+            .replace(/min/g, 'm')
+            .replace(/sec/g, 's')
+            .replace(/\s*:\s*/g, ' ');
 
         doc.text(number, 20, yPos);
         doc.text(name, 40, yPos);
@@ -243,6 +238,17 @@ stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
 
+// --- MODIFIED SECTION START ---
+
+// Helper function to format an input to always have two digits
+function formatToTwoDigits(inputElement) {
+    if (isNaN(parseInt(inputElement.value))) {
+        inputElement.value = "00";
+    } else {
+        inputElement.value = String(inputElement.value).padStart(2, '0');
+    }
+}
+
 function setupInputListeners(hrInput, minInput, secInput) {
     hrInput.addEventListener('input', () => {
         if (hrInput.value < 0) hrInput.value = 0;
@@ -252,9 +258,9 @@ function setupInputListeners(hrInput, minInput, secInput) {
         if (minInput.value < 0) minInput.value = 0;
         if (minInput.value >= 60) {
             let hoursToAdd = Math.floor(minInput.value / 60);
-            let newMinutes = minInput.value % 60;
             hrInput.value = parseInt(hrInput.value || 0) + hoursToAdd;
-            minInput.value = newMinutes;
+            minInput.value = minInput.value % 60;
+            formatToTwoDigits(hrInput); // Format after auto-update
         }
     });
     
@@ -262,29 +268,38 @@ function setupInputListeners(hrInput, minInput, secInput) {
         if (secInput.value < 0) secInput.value = 0;
         if (secInput.value >= 60) {
             let minutesToAdd = Math.floor(secInput.value / 60);
-            let newSeconds = secInput.value % 60;
             minInput.value = parseInt(minInput.value || 0) + minutesToAdd;
-            secInput.value = newSeconds;
+            secInput.value = secInput.value % 60;
             // Re-check minutes in case seconds pushed it over 60
             if (minInput.value >= 60) {
                 let hoursToAdd = Math.floor(minInput.value / 60);
-                let newMinutes = minInput.value % 60;
                 hrInput.value = parseInt(hrInput.value || 0) + hoursToAdd;
-                minInput.value = newMinutes;
+                minInput.value = minInput.value % 60;
+                formatToTwoDigits(hrInput); // Format after auto-update
             }
+            formatToTwoDigits(minInput); // Format after auto-update
         }
     });
 
+    // Add blur event listeners to format the inputs when the user clicks away
     const inputs = [hrInput, minInput, secInput];
     inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            if (input.value === '' || isNaN(input.value)) {
-                input.value = 0;
-            }
-        });
+        input.addEventListener('blur', () => formatToTwoDigits(input));
     });
 }
+
+// --- NEW FUNCTION ---
+// Function to format all time inputs when the page loads
+function formatInitialValues() {
+    const allTimeInputs = document.querySelectorAll('.time-input-group input[type="number"]');
+    allTimeInputs.forEach(input => formatToTwoDigits(input));
+}
+
+// --- MODIFIED SECTION END ---
 
 setupInputListeners(greenHrInput, greenMinInput, greenSecInput);
 setupInputListeners(yellowHrInput, yellowMinInput, yellowSecInput);
 setupInputListeners(redHrInput, redMinInput, redSecInput);
+
+// Run the initial formatting once the page content is loaded
+document.addEventListener('DOMContentLoaded', formatInitialValues);
