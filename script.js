@@ -238,8 +238,6 @@ stopBtn.addEventListener('click', stopAndRecord);
 cancelBtn.addEventListener('click', cancelTimer);
 exportBtn.addEventListener('click', exportToPDF);
 
-// --- MODIFIED SECTION START ---
-
 // Helper function to format an input to always have two digits
 function formatToTwoDigits(inputElement) {
     if (isNaN(parseInt(inputElement.value))) {
@@ -288,14 +286,13 @@ function setupInputListeners(hrInput, minInput, secInput) {
     });
 }
 
-// --- NEW FUNCTION ---
 // Function to format all time inputs when the page loads
 function formatInitialValues() {
     const allTimeInputs = document.querySelectorAll('.time-input-group input[type="number"]');
     allTimeInputs.forEach(input => formatToTwoDigits(input));
 }
 
-// --- MODIFIED SECTION END ---
+// --- SECTION END ---
 
 setupInputListeners(greenHrInput, greenMinInput, greenSecInput);
 setupInputListeners(yellowHrInput, yellowMinInput, yellowSecInput);
@@ -303,3 +300,4 @@ setupInputListeners(redHrInput, redMinInput, redSecInput);
 
 // Run the initial formatting once the page content is loaded
 document.addEventListener('DOMContentLoaded', formatInitialValues);
+
