@@ -4,14 +4,18 @@
     --yellow: #facc15;
     --red: #ef4444;
     --darkred: #991b1b;
-    --bg: #0f17a;
-    --text: #f8fafc;
+    --bg: #0f172a;
+    
+    /* Variables for high-contrast text */
+    --text-primary: #f8fafc;     /* For main text */
+    --text-secondary: #e2e8f0;   /* Brighter grey for labels & secondary info */
+    --text-dark: #0f172a;        /* For use on light backgrounds like yellow */
+    
     --border: #334155;
     --shadow: rgba(0, 0, 0, 0.25);
     --panel-bg: rgba(30, 41, 59, 0.7);
     --cancel-btn: #475569;
     --export-btn: #2d3748;
-    --dynamic-text-color: var(--text);
 }
 
 /* --- Base Styles & Modern Reset --- */
@@ -29,7 +33,7 @@ body {
     align-items: center;
     font-family: 'Inter', sans-serif;
     background: var(--bg);
-    color: var(--dynamic-text-color);
+    color: var(--text-primary);
     transition: background-color 0.8s ease;
     gap: 1.25rem;
     padding: 1.5rem;
@@ -51,7 +55,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin-top: 0.5rem;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
 .info-details {
@@ -61,7 +65,6 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 0.5rem 1rem;
-    /* Creates the frosted glass effect */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
@@ -69,18 +72,15 @@ body {
 .info-details summary {
     font-weight: 600;
     cursor: pointer;
-    list-style: none; /* Removes the default disclosure triangle */
+    list-style: none;
     padding: 0.5rem 0;
     transition: color 0.2s ease;
 }
 
-/* Hides the default marker in all browsers */
 .info-details summary::marker,
 .info-details summary::-webkit-details-marker {
     display: none;
 }
-
-/* Creates a custom '+' marker for the collapsible section */
 .info-details summary::before {
     content: '+';
     font-size: 1.2rem;
@@ -95,22 +95,20 @@ body {
 }
 
 .info-details[open] summary::before {
-    transform: rotate(45deg); /* Animates the '+' to a 'x' */
+    transform: rotate(45deg);
 }
 
 .info-details .info-content {
     padding: 0.5rem 0 1rem 0;
     font-size: 0.9rem;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     border-top: 1px solid var(--border);
     margin-top: 0.5rem;
 }
-
 .info-details .info-content ul {
     list-style-type: none;
     padding-left: 0;
 }
-
 .info-details .info-content li {
     margin-bottom: 0.2rem;
 }
@@ -123,7 +121,6 @@ body {
 
 /* --- Main Timer Display --- */
 #timer {
-    /* Fluid typography: scales font size between 3rem and 5rem based on viewport width */
     font-size: clamp(3rem, 15vw, 5rem);
     font-weight: 700;
     text-align: center;
@@ -133,9 +130,9 @@ body {
 
 #timer .unit {
     font-style: normal;
-    font-size: 0.3em; /* Relative to the main timer's font size */
+    font-size: 0.3em;
     font-weight: 400;
-    color: #94a3b8;
+    color: var(--text-secondary);
     margin: 0 0.1em;
 }
 
@@ -156,7 +153,6 @@ body {
 
 .input-grid {
     display: grid;
-    /* Responsive columns: fits as many 160px columns as possible, then wraps */
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 1rem;
 }
@@ -182,7 +178,6 @@ body {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Provides a glow effect when any input inside the group is focused */
 .time-input-group:focus-within {
     border-color: var(--yellow);
     box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
@@ -192,15 +187,14 @@ body {
     width: 100%;
     border: none;
     background: transparent;
-    color: var(--dynamic-text-color);
+    color: var(--text-primary);
     text-align: center;
     font-size: 1rem;
     padding: 0.6rem 0.2rem;
     outline: none;
-    -moz-appearance: textfield; /* Hides number spinners in Firefox */
+    -moz-appearance: textfield;
 }
 
-/* Hides number spinners in Chrome, Safari, Edge */
 .time-input-group input::-webkit-outer-spin-button,
 .time-input-group input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -209,7 +203,7 @@ body {
 
 .time-input-group .unit {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--text-secondary);
 }
 
 .full-width {
@@ -223,7 +217,7 @@ input[type="text"] {
     border-radius: 8px;
     border: 1px solid var(--border);
     background: var(--bg);
-    color: var(--dynamic-text-color);
+    color: var(--text-primary);
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -258,17 +252,13 @@ button:hover {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-/* Default "Start" button style */
 #mainActionBtn {
     background: linear-gradient(145deg, var(--green), #16a34a);
-    /* Spans both columns when the cancel button is hidden */
     grid-column: 1 / -1;
 }
 
-/* Style for when the button is in "Stop & Record" mode */
 #mainActionBtn.stop-mode {
     background: linear-gradient(145deg, var(--red), var(--darkred));
-    /* Returns to a single column to make space for the cancel button */
     grid-column: auto;
 }
 
@@ -304,16 +294,15 @@ button:hover {
 #speakersList {
     max-height: 250px;
     overflow-y: auto;
-    padding-right: 0.5rem; /* Prevents scrollbar from overlapping content */
+    padding-right: 0.5rem;
 }
 
-/* Custom scrollbar styles for a modern look */
 #speakersList::-webkit-scrollbar { width: 8px; }
 #speakersList::-webkit-scrollbar-track { background: var(--bg); border-radius: 8px; }
 #speakersList::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 #speakersList::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-#noSpeakersMsg { color: #94a3b8; }
+#noSpeakersMsg { color: var(--text-secondary); }
 
 .speaker-entry {
     display: flex;
